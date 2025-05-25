@@ -31,6 +31,8 @@ x86/
 [Aa][Rr][Mm]64/
 bld/
 [Bb]in/
+!bin/fluidsynth.exe
+!bin/MuseScore3.exe
 [Oo]bj/
 [Ll]og/
 [Ll]ogs/
