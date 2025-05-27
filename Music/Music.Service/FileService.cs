@@ -35,7 +35,8 @@ using NAudio.Midi;
 using NAudio.Wave;
 using Ghostscript.NET.Rasterizer;
 
-
+using System.Net;
+using MeltySynth;
 
 namespace Music.Service
 {
@@ -226,12 +227,26 @@ namespace Music.Service
         //convert mid file to music wav
         public static List<byte> ConvertMidiToWav(string midiPath, string wavPath)
         {
+            // 1. קישור לקובץ ה-SoundFont בענן
+            string soundFontUrl = "https://cyfuture.dl.sourceforge.net/project/androidframe/soundfonts/FluidR3_GM.sf2?viasf=1";
+            string tempDir = Path.GetTempPath();
+            string soundFontPath = Path.Combine(tempDir, "FluidR3_GM.sf2");
+            // 2. הורדת קובץ ה-SoundFont אם הוא לא קיים עדיין
+            if (!System.IO.File.Exists(soundFontPath))
+            {
+                using (var client = new System.Net.WebClient())
+                {
+                    client.DownloadFile(soundFontUrl, soundFontPath);
+                }
+            }
+
+
             var process = new Process();
-            string soundFont = @"../fluidsynth/sf2/FluidR3_GM.sf2";
+            //string soundFont = @"../fluidsynth/sf2/FluidR3_GM.sf2";
             string fluidsynthExe = @"../fluidsynth/bin/fluidsynth.exe";
 
             process.StartInfo.FileName = fluidsynthExe;
-            process.StartInfo.Arguments = $"-ni \"{soundFont}\" \"{midiPath}\" -F \"{wavPath}\"";
+            process.StartInfo.Arguments = $"-ni \"{soundFontPath}\" \"{midiPath}\" -F \"{wavPath}\"";
             process.StartInfo.UseShellExecute = false;
             process.StartInfo.RedirectStandardOutput = true;
             process.StartInfo.RedirectStandardError = true;
