@@ -110,7 +110,7 @@ namespace Music.Service
 
         public async Task<byte[]> ConvertToSong(string fileName,string path)
         {
-            string fileUrl = "https://www.imrikeren.com/_files/ugd/c52e4f_aa6d3b95834a4f3da7a6b2d9a9f813cb.pdf?index=true&~nfopt(fileDistorted=7428808542908334)";
+            //string fileUrl = "https://www.imrikeren.com/_files/ugd/c52e4f_aa6d3b95834a4f3da7a6b2d9a9f813cb.pdf?index=true&~nfopt(fileDistorted=7428808542908334)";
             string tempFolder = Path.GetTempPath();
             string outputImagePath = Path.Combine(tempFolder, "output_image.png");
             string outputXmlPath = Path.Combine(tempFolder, "output_image.mxl");///???mxl
@@ -125,7 +125,7 @@ namespace Music.Service
                 using (var client = new WebClient())
                 {
                     string localPdfPath = Path.Combine(tempFolder, "temp.pdf");
-                    client.DownloadFile(fileUrl, localPdfPath);
+                    client.DownloadFile(path, localPdfPath);
 
                     // רינדור העמוד לתמונה
                     step1Output = PdfToImageRenderer.RenderPdfPageToImage(localPdfPath, outputImagePath);
