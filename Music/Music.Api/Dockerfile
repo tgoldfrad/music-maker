@@ -9,15 +9,18 @@ EXPOSE 8080
 
 RUN apt-get update \
     && apt-get install -y ghostscript fluidsynth wget unzip default-jre musescore \
-    # התקנת Audiveris (deb) מ־GitHub
     && wget https://github.com/Audiveris/audiveris/releases/download/5.6.1/Audiveris-5.6.1-ubuntu22.04-x86_64.deb \
     && apt-get install -y ./Audiveris-5.6.1-ubuntu22.04-x86_64.deb || true \
     && rm -f Audiveris-5.6.1-ubuntu22.04-x86_64.deb \
-    # חיפוש סקריפט ההפעלה ויצירת symlink ל־audiveris
-    && if [ -f /opt/audiveris/bin/audiveris.sh ]; then ln -sf /opt/audiveris/bin/audiveris.sh /usr/local/bin/audiveris && chmod +x /usr/local/bin/audiveris; fi \
-    # בדיקה שהפקודה זמינה
+    && ls -l /opt/audiveris/bin/ || echo "no audiveris bin found" \
+    # אם הסקריפט קיים – symlink, אם לא – צור סקריפט משלך
+    && if [ -f /opt/audiveris/bin/audiveris.sh ]; then \
+         ln -sf /opt/audiveris/bin/audiveris.sh /usr/local/bin/audiveris && chmod +x /usr/local/bin/audiveris; \
+       elif [ -f /opt/audiveris/share/java/audiveris.jar ]; then \
+         echo '#!/bin/bash\nexec java -jar /opt/audiveris/share/java/audiveris.jar "$@"' > /usr/local/bin/audiveris && chmod +x /usr/local/bin/audiveris; \
+       fi \
     && which audiveris \
-    && audiveris --version || echo "audiveris installed"
+    && audiveris --version || echo "audiveris not found
 
 USER $APP_UID
 # This stage is used to build the service project
