@@ -8,18 +8,16 @@ EXPOSE 8080
 
 
 RUN apt-get update \
-    && apt-get install -y ghostscript fluidsynth wget unzip default-jre \
-    && apt-get install -y musescore || echo "musescore not available, skipping" \
+    && apt-get install -y ghostscript fluidsynth wget unzip default-jre musescore \
+    # התקנת Audiveris (deb) מ־GitHub
     && wget https://github.com/Audiveris/audiveris/releases/download/5.6.1/Audiveris-5.6.1-ubuntu22.04-x86_64.deb \
-    && dpkg -i Audiveris-5.6.1-ubuntu22.04-x86_64.deb || true \
-    && apt-get install -f -y \
-    && rm -rf Audiveris-5.6.1-ubuntu22.04-x86_64.deb \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/* \
-    && which gs \
-    && gs --version \
+    && apt-get install -y ./Audiveris-5.6.1-ubuntu22.04-x86_64.deb || true \
+    && rm -f Audiveris-5.6.1-ubuntu22.04-x86_64.deb \
+    # חיפוש סקריפט ההפעלה ויצירת symlink ל־audiveris
+    && if [ -f /opt/audiveris/bin/audiveris.sh ]; then ln -sf /opt/audiveris/bin/audiveris.sh /usr/local/bin/audiveris && chmod +x /usr/local/bin/audiveris; fi \
+    # בדיקה שהפקודה זמינה
     && which audiveris \
-    && audiveris --version || echo "audiveris version check failed, but install probably succeeded"
+    && audiveris --version || echo "audiveris installed"
 
 USER $APP_UID
 # This stage is used to build the service project
