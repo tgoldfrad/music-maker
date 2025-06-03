@@ -56,12 +56,21 @@ builder.Services.AddSwaggerGen(options =>
 
 builder.Services.AddOpenApi();
 
-builder.Services.AddCors(opt => opt.AddPolicy("MyPolicy", policy =>
-{
-    policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+//builder.Services.AddCors(opt => opt.AddPolicy("MyPolicy", policy =>
+//{
+//    policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+//}));
+
+
+//cors
+builder.Services.AddCors(opt => opt.AddPolicy("MyPolicy", policy => {
+    policy.WithOrigins(
+             "https://music-maker-manager.onrender.com",
+             "https://music-maker-9rwb.onrender.com",
+             "http://localhost:4200",
+            "http://localhost:5173").AllowAnyHeader().AllowAnyMethod().AllowCredentials();
+
 }));
-
-
 
 builder.Services.AddAuthentication(options =>
 {
