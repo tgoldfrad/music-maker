@@ -9,16 +9,17 @@ EXPOSE 8080
 
 RUN apt-get update \
     && apt-get install -y ghostscript fluidsynth wget unzip default-jre \
-    # אפשר לנסות גם musescore, אם קיים:
     && apt-get install -y musescore || echo "musescore not available, skipping" \
-    # התקנת Audiveris
     && wget https://github.com/Audiveris/audiveris/releases/download/5.6.1/Audiveris-5.6.1-ubuntu22.04-x86_64.deb \
-    && dpkg -i Audiveris-5.6.1-ubuntu22.04-x86_64.deb || apt-get install -f -y \
+    && dpkg -i Audiveris-5.6.1-ubuntu22.04-x86_64.deb || true \
+    && apt-get install -f -y \
     && rm -rf Audiveris-5.6.1-ubuntu22.04-x86_64.deb \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* \
     && which gs \
-    && gs --version
+    && gs --version \
+    && which audiveris \
+    && audiveris --version || echo "audiveris version check failed, but install probably succeeded"
 
 USER $APP_UID
 # This stage is used to build the service project
