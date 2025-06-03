@@ -8,16 +8,18 @@ EXPOSE 8080
 
 FROM ubuntu:22.04
 
-RUN apt-get update && \
-    apt-get install -y software-properties-common && \
-    add-apt-repository universe && \
-    apt-get update && \
-    apt-get install -y ghostscript musescore fluidsynth wget unzip default-jre && \
-    wget https://github.com/Audiveris/audiveris/releases/download/5.6.1/Audiveris-5.6.1-ubuntu22.04-x86_64.deb && \
-    dpkg -i Audiveris-5.6.1-ubuntu22.04-x86_64.deb || apt-get install -f -y && \
-    rm -rf Audiveris-5.6.1-ubuntu22.04-x86_64.deb && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+RUN apt-get update \
+    && apt-get install -y software-properties-common \
+    && add-apt-repository universe \
+    && apt-get update \
+    && apt-get install -y ghostscript musescore fluidsynth wget unzip default-jre \
+    && wget https://github.com/Audiveris/audiveris/releases/download/5.6.1/Audiveris-5.6.1-ubuntu22.04-x86_64.deb \
+    && dpkg -i Audiveris-5.6.1-ubuntu22.04-x86_64.deb; apt-get install -f -y \
+    && rm -rf Audiveris-5.6.1-ubuntu22.04-x86_64.deb \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* \
+    && which gs \
+    && gs --version
 
 # This stage is used to build the service project
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
