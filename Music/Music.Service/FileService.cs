@@ -618,10 +618,10 @@ namespace Music.Service
         //convert image to mxl
         public static string ConvertImageToMusicXml(string inputImagePath, string outputXmlPath)
         {
-            string audiverisExecutable = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
-                ? @"..\Audiveris\audiveris.exe"
-                : "audiveris";
-
+            //string audiverisExecutable = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+            //    ? @"..\Audiveris\audiveris.exe"
+            //    : "audiveris";
+            string audiverisExecutable = @"..\Audiveris\audiveris.exe";
             var process = new Process()
             {
                 StartInfo = new ProcessStartInfo
